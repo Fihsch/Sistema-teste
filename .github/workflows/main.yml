@@ -1,0 +1,24 @@
+name: pipeline-de-deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instala a Netlify CLI
+        run: npm install -g netlify-cli
+
+      - name: Deploy no Netlify
+        env:
+          TOKEN_QUE_PRECISA_SER_GERADO: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          ID_DO_PROJETO_DE_VOCES: ${{ secrets.NETLIFY_SITE_ID }}
+        run: netlify deploy --site=$ID_DO_PROJETO_DE_VOCES --auth=$TOKEN_QUE_PRECISA_SER_GERADO --dir="." --prod
